@@ -1,0 +1,41 @@
+<!--
+  Generated template for the StartPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>CREAR CASO</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content center text-center>
+  <form [formGroup]="todo" (ngSubmit)="logForm()">
+    <ion-item>
+      <ion-label>Nombre</ion-label>
+      <ion-input type="text" formControlName="title"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Descripción</ion-label>
+      <ion-textarea formControlName="description"></ion-textarea>
+    </ion-item>
+    <button ion-button type="submit" [disabled]="!todo.valid" block>Submit</button>
+  </form>
+</ion-content>
+<!--ion-content center text-center>
+
+
+
+  <ion-grid style="height: 100%">
+    <ion-row justify-content-center align-items-center style="height: 100%">
+      <button ion-button round outline (click)="start();">START</button>
+    </ion-row>
+  </ion-grid>
+
+
+
+
+</ion-content-->

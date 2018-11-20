@@ -1,0 +1,118 @@
+<!--
+  Generated template for the MDesafioPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>{{name}}</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="closeModal()">Cerrar</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ng-progress [showSpinner]="false"></ng-progress>
+
+
+
+<ion-content padding *ngIf="name=='Evasión de Red'">
+
+
+  <ion-stepper #stepper (selectIndexChange)="selectChange($event)">
+    <ion-step label="Nivel 1"
+              description="Verify LAN Connectivity Raspberrry">
+      <h3 *ngIf="interface">INTERFACE: {{interface}} IP:{{ip}}</h3>
+      <p *ngIf="gateway">GATEWAY{{gateway}}</p>
+      <button ion-button small (click)="checkLAN()">VALIDAR LAN</button>
+      <button ion-button small (click)="evadeLAN()" *ngIf="isEvadeLan">EVADIR LAN</button>
+      <button [attr.disabled]="!isValidLan ? true : null" ion-button small ionicStepperNext>Siguiente</button>
+    </ion-step>
+    <ion-step label="Nivel 2"
+              description="Verify DNS Connectivity Raspberrry">
+      <h3 *ngIf="address_dns">DNS: {{address_dns}}</h3>
+
+      <button ion-button color="light" small ionicStepperPrevious>Previous</button>
+      <button ion-button small (click)="checkDNS()">VALIDAR DNS</button>
+
+      <button [attr.disabled]="!isValidDns ? true : null" ion-button small ionicStepperNext>Siguiente</button>
+    </ion-step>
+
+    <ion-step label="Nivel 3"
+              description="Verify HTTP Connectivity Raspberrry">
+      <h3 *ngIf="http_status">HTTP: {{http_status}}</h3>
+
+      <button ion-button color="light" small ionicStepperPrevious>Previous</button>
+      <button ion-button small (click)="checkHTTP()" *ngIf="global.httpTunnelingFlag == false">VALIDAR HTTP</button>
+      <button ion-button small (click)="checkHTTP_t()" *ngIf="global.httpTunnelingFlag == true">VALIDAR HTTP TUNNELING</button>
+      <button [attr.disabled]="!isValidHttp ? true : null" ion-button small ionicStepperNext>Siguiente</button>
+    </ion-step>
+    <ion-step label="Nivel 4"
+              description="Verify HTTPS Connectivity Raspberrry">
+      <h3 *ngIf="https_status">HTTPS: {{https_status}}</h3>
+
+
+      <button ion-button color="light" small ionicStepperPrevious>Previous</button>
+      <button ion-button small (click)="checkHTTPS()" *ngIf="global.httpTunnelingFlag == false">VALIDAR HTTPS</button>
+      <button ion-button small (click)="checkHTTPS_t()" *ngIf="global.httpTunnelingFlag == true">VALIDAR HTTPS TUNNELING</button>
+      <button [attr.disabled]="!isValidHttps ? true : null" ion-button small ionicStepperNext (click)="finish()">Finalizar
+      </button>
+    </ion-step>
+
+
+  </ion-stepper>
+
+</ion-content>
+
+<ion-content padding *ngIf="name=='Descubrimiento de Activos'">
+  <ion-buttons>
+    <button ion-button block (click)="getDiscovery()">Buscar Dispositivos</button>
+  </ion-buttons>
+
+  <ion-list>
+    <div *ngFor="let item of networks_saved">
+    <ion-item (click)="goToHost(item.cases_id, item.mac, item.ipv4, item.vendor)">
+      <h2>{{item.vendor}}</h2>
+      <p>{{ item.ipv4}}</p>
+      <p>{{ item.mac}}</p>
+
+      <!--ion-select [(ngModel)]="item.types" multiple="false">
+        <ion-option>Servidor</ion-option>
+        <ion-option>Base de Datos</ion-option>
+        <ion-option>Usuario</ion-option>
+        <ion-option>Equipo Critico</ion-option>
+      </ion-select-->
+    </ion-item>
+    </div>
+  </ion-list>
+
+
+
+
+  <!--ion-buttons *ngIf="networks_saved.length > 0">
+    <button ion-button block (click)="saveDiscovery(networks_saved)">GUARDAR</button>
+  </ion-buttons-->
+</ion-content>
+
+<ion-content padding *ngIf="name=='Gestión de Vulnerabilidades'">
+  <ion-list>
+    <div *ngFor="let item of discovery_saved">
+      <ion-item>
+        <h2>Host: {{item.ipv4}}</h2>
+        <p *ngIf="item.cantidad_cve > 10">Port: {{ item.port}} <ion-badge item-end color="danger" > Cantidad CVE {{item.cantidad_cve}}</ion-badge></p>
+        <p  *ngIf="item.cantidad_cve < 11 && item.cantidad_cve > 5">Port: {{ item.port}} <ion-badge item-end color="primary"> Cantidad CVE {{item.cantidad_cve}}</ion-badge></p>
+        <p  *ngIf="item.cantidad_cve < 6">Port: {{ item.port}} <ion-badge item-end color="secondary"> Cantidad CVE {{item.cantidad_cve}}</ion-badge></p>
+
+
+        <!--ion-select [(ngModel)]="item.types" multiple="false">
+          <ion-option>Servidor</ion-option>
+          <ion-option>Base de Datos</ion-option>
+          <ion-option>Usuario</ion-option>
+          <ion-option>Equipo Critico</ion-option>
+        </ion-select-->
+      </ion-item>
+    </div>
+  </ion-list>
+
+</ion-content>

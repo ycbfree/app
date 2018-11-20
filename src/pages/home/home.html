@@ -1,14 +1,39 @@
+<!--button ion-button clear item-end (click)="getDiscovery()"><ion-icon name="sync"></ion-icon></button>
+        <button ion-button clear item-end ><ion-icon name="more"></ion-icon></button-->
+
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
+  <ion-navbar color="primary">
+    <ion-title>Home</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+
+  <button ion-button block (click)="goStart()">
+    INICIAR CASO
+  </button>
+
+  <ion-card>
+    <ion-card-header>
+     Historial
+    </ion-card-header>
+    <ion-list>
+      <ion-item-sliding *ngFor="let item of all_cases">
+
+        <ion-item (click)="goToCase(item.name,item.created_time,item.name,item.description)">
+          <h2> {{ item.name }}</h2>
+          <p>{{ item.description }}</p>
+          <button ion-button clear item-end><ion-icon name="arrow-forward"></ion-icon></button>
+        </ion-item>
+
+        <ion-item-options side="right">
+          <button ion-button color="danger" (click)="deleteCase(item.id)">ELIMINAR</button>
+        </ion-item-options>
+
+      </ion-item-sliding>
+
+
+    </ion-list>
+  </ion-card>
 </ion-content>
+

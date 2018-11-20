@@ -1,0 +1,37 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>{{name}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-card-header>
+      {{description | uppercase}}
+    </ion-card-header>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-list>
+        <ion-list-header>
+          Desafios
+        </ion-list-header>
+        <ion-item (click)="openModal(1)">Desafio 1 - Evasión de Red</ion-item>
+        <ion-item (click)="openModal(2)">Desafio 2 - Descubrimiento de Activos</ion-item>
+        <ion-item (click)="openModal(3)">Desafio 3 - Gestión de Vulnerabilidades</ion-item>
+      </ion-list>
+    </ion-card-content>
+
+  </ion-card>
+
+  <ion-card>
+    <ion-card-content color="primary">
+      <ion-list color="primary">
+        <ion-item (click)="goReport()">Reportes</ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

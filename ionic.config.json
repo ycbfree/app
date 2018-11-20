@@ -1,5 +1,8 @@
 {
   "name": "YCBapp",
-  "app_id": "",
-  "type": "ionic-angular"
+  "app_id": "29a21938",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
 }
