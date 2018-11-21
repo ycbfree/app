@@ -5,8 +5,7 @@ import { NgProgress } from 'ngx-progressbar';
 import {DatabaseProvider} from "../../providers/database/database";
 import swal from "sweetalert";
 import {GlobalProvider} from "../../providers/global/global";
-import { LoadingController } from 'ionic-angular';
-
+import { LoadingProvider } from '../../providers/loading/loading';
 /**
  * Generated class for the MDesafioPage page.
  *
@@ -53,7 +52,7 @@ export class MDesafioPage {
               public networks: NetworksProvider,
               private database: DatabaseProvider,
               public global: GlobalProvider,
-              public loading: LoadingController) {
+              public loadingCtrl: LoadingProvider) {
   }
 
   ionViewDidLoad() {
@@ -306,27 +305,20 @@ export class MDesafioPage {
 
   // Query to get all hosts by case id from localdatabase
   getHosts(_id){
-    //this.ngProgress.start();
-    let loader = this.loading.create({
-      content: 'Getting hosts...',
-    });
-
-    //loader.present().then(() => {
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
       this.database.getAllHostsByCaseID(_id).then((data) => {
         this.networks_saved = Object(data);
         console.log("getHosts");
         console.log(this.networks_saved);
-
-        //this.ngProgress.done();
-       // loader.dismiss();
+        this.loadingCtrl.loading.dismissAll();
       }, (error) => {
-        this.ngProgress.done();
-        //console.log(error);
-      //  loader.dismiss();
+        this.loadingCtrl.loading.dismissAll();
       });
+    } );
 
-     // loader.dismiss();
-   // });
+
+
+
 
 
 

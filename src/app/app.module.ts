@@ -18,6 +18,7 @@ import { IonicStepperModule } from 'ionic-stepper';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { NgProgressModule } from 'ngx-progressbar';
 import { GlobalProvider } from '../providers/global/global';
+import { LoadingProvider } from '../providers/loading/loading';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { GlobalProvider } from '../providers/global/global';
     NetworksProvider,
     DatabaseProvider,
     SQLite,
-    GlobalProvider
+    GlobalProvider,
+    LoadingProvider
   ]
 })
 export class AppModule {}

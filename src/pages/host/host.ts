@@ -7,6 +7,8 @@ import {GlobalProvider} from "../../providers/global/global";
 import {MVulnerabilitiesPageModule} from "../m-vulnerabilities/m-vulnerabilities.module";
 import {MVulnerabilitiesPage} from "../m-vulnerabilities/m-vulnerabilities";
 import {DatabaseProvider} from "../../providers/database/database";
+import { LoadingProvider } from '../../providers/loading/loading';
+
 
 /**
  * Generated class for the HostPage page.
@@ -39,9 +41,8 @@ export class HostPage {
               public networks: NetworksProvider,
               public global: GlobalProvider,
               private modal: ModalController,
-              private database: DatabaseProvider
-
-  ) {
+              private database: DatabaseProvider,
+              public loadingCtrl: LoadingProvider) {
   }
 
   ionViewDidLoad() {
@@ -52,59 +53,63 @@ export class HostPage {
   }
 
   getVuln(ipv4){
-    this.ngProgress.start();
-    this.networks.getVulnByIp(ipv4)
-      .subscribe(
-        (data) => {
-          let listports = data['services'];
-          let listcve = data['CVE'];
-          this.net_ports =[];
-          listports.forEach(item => {
-            let port = item["port"];
-            let countCVE = 0;
-            listcve.forEach(subitem =>{
-              if (port == subitem["port"]){
-                countCVE += 1;
-              }
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
+      this.networks.getVulnByIp(ipv4)
+        .subscribe(
+          (data) => {
+            let listports = data['services'];
+            let listcve = data['CVE'];
+            this.net_ports =[];
+            listports.forEach(item => {
+              let port = item["port"];
+              let countCVE = 0;
+              listcve.forEach(subitem =>{
+                if (port == subitem["port"]){
+                  countCVE += 1;
+                }
+
+              });
+              let obj = {
+                "port": item["port"],
+                "protocol": item["protocol"],
+                "service": item["service"],
+                "state": item["state"],
+                "version": item["version"],
+                "cantidadCVE" : countCVE
+              };
+              this.net_ports.push(obj);
+
+              this.database.insertHostDiscovery(this.ipv4, parseInt(item["port"]),item["protocol"],item["state"],item["version"], this.cases_id,countCVE).then((data) => {
+                console.log(data["insertId"]);
+                //this.ngProgress.done();
+                //swal("Exito!", "Guardado Correctamente!.", "success");
+              }, (error) => {
+                //this.ngProgress.done();
+                //swal("Ups!", "Error, intente luego!.", "error");
+                console.log(error);
+              });
+
+
 
             });
-            let obj = {
-              "port": item["port"],
-              "protocol": item["protocol"],
-              "service": item["service"],
-              "state": item["state"],
-              "version": item["version"],
-              "cantidadCVE" : countCVE
-            };
-            this.net_ports.push(obj);
 
-            this.database.insertHostDiscovery(this.ipv4, parseInt(item["port"]),item["protocol"],item["state"],item["version"], this.cases_id,countCVE).then((data) => {
-              console.log(data["insertId"]);
-              //this.ngProgress.done();
-              //swal("Exito!", "Guardado Correctamente!.", "success");
-            }, (error) => {
-              //this.ngProgress.done();
-              //swal("Ups!", "Error, intente luego!.", "error");
-              console.log(error);
-            });
+            //this.net_ports = data['services'];
+            this.net_vulns = data['CVE'];
+
+        this.loadingCtrl.loading.dismiss();
+
+            //console.log(data);
+            //this.pService.done();
+          },
+          (error) => {
+            console.error(error);
+        this.loadingCtrl.loading.dismiss();
+          }
+        );
+
+    });
 
 
-
-          });
-
-          //this.net_ports = data['services'];
-          this.net_vulns = data['CVE'];
-
-          this.ngProgress.done();
-
-          //console.log(data);
-          //this.pService.done();
-        },
-        (error) => {
-          console.error(error);
-          this.ngProgress.done();
-        }
-      );
   }
 
   showCVE(port){
@@ -131,24 +136,24 @@ export class HostPage {
   }
 
   getDiscovery(ipv4){
-    this.ngProgress.start();
+    this.loadingCtrl.presentWithGif1();
     this.networks.getVulnByIp(ipv4)
     .subscribe(
       (data) => {
         this.net_vulns = data['result'];
-        this.ngProgress.done();
+        this.loadingCtrl.dismiss();
         //console.log(data);
         //this.pService.done();
       },
       (error) => {
         console.error(error);
-        this.ngProgress.done();
+        this.loadingCtrl.dismiss();
       }
     );
   }
 
   _dnsResolver(){
-    this.ngProgress.start();
+    this.loadingCtrl.presentWithGif1();
     this.networks.dnsResolver(this.ipv4)
       .subscribe(
         (data) => {
@@ -159,12 +164,12 @@ export class HostPage {
           }else{
             swal("Error!", "NO DNS!", "error");
           }
-          this.ngProgress.done();
+          this.loadingCtrl.dismiss();
         },
         (error) => {
           console.error(error);
           swal("Ups!", "Error, intente luego!.", "error");
-          this.ngProgress.done();
+          this.loadingCtrl.dismiss();
 
 
         }
@@ -172,7 +177,7 @@ export class HostPage {
   }
 
   _dnsTunneling(){
-    this.ngProgress.start();
+    this.loadingCtrl.presentWithGif1();
     this.networks.dnsTunneling()
       .subscribe(
         (data) => {
@@ -193,12 +198,12 @@ export class HostPage {
               }
             );
           }
-          this.ngProgress.done();
+          this.loadingCtrl.dismiss();
         },
         (error) => {
           console.error(error);
           swal("Ups!", "Error, intente luego!.", "error");
-          this.ngProgress.done();
+          this.loadingCtrl.dismiss();
         }
       )
   }
