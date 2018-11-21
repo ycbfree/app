@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class NetworksProvider {
 
-  url : string = "http://192.168.5.1:5000";
+  url : string = "http://192.168.0.34:5000";
 
   constructor(public http: HttpClient) {
   }

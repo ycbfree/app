@@ -130,12 +130,16 @@ export class DatabaseProvider {
 
   createHost2(ipv4: string, mac: string, vendor: string, status: string, types: string,cases_id: number){
     return new Promise((resolve, reject) => {
-      this.db.executeSql("SELECT * FROM host where mac = ? and cases_id = ?", [mac, cases_id]).then((data) => {
+      let sql = "SELECT * FROM host where mac = ? and cases_id = ?";
+      this.db.executeSql(sql, [mac, cases_id]).then((data) => {
+        //console.log(sql);
         let arrayNetworks = [];
         if(data.rows.length >0) {
           //return new Promise((resolve, reject) => {
-            let sql = "UPDATE host set ipv4 = ?, vendor = ?, status = ?, types = ? where mac = ? and cases_id = ?'";
-            this.db.executeSql(sql,[ipv4, vendor, status, types, mac, cases_id]).then((data) => {
+
+          let sql = "UPDATE host set ipv4 = '"+ipv4+"', vendor = '"+vendor+"', status = '"+status+"', types = '"+types+"' where mac = '"+mac+"' and cases_id = "+cases_id+"";
+            //console.log(sql);
+            this.db.executeSql(sql,[]).then((data) => {
               resolve(data);
             }, (error) => {
               reject(error);
@@ -144,6 +148,7 @@ export class DatabaseProvider {
         }else{
           //return new Promise((resolve, reject) => {
             let sql = "INSERT INTO host (ipv4, mac, vendor, status, types, cases_id) VALUES (?,?,?,?,?,?)";
+            //console.log(sql);
             this.db.executeSql(sql,[ipv4, mac, vendor, status, types,cases_id]).then((data) => {
               resolve(data);
             }, (error) => {

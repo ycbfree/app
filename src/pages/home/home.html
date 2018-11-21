@@ -20,7 +20,7 @@
     <ion-list>
       <ion-item-sliding *ngFor="let item of all_cases">
 
-        <ion-item (click)="goToCase(item.name,item.created_time,item.name,item.description)">
+        <ion-item (click)="goToCase(item.id,item.created_time,item.name,item.description)">
           <h2> {{ item.name }}</h2>
           <p>{{ item.description }}</p>
           <button ion-button clear item-end><ion-icon name="arrow-forward"></ion-icon></button>

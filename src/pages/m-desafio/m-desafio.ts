@@ -5,6 +5,7 @@ import { NgProgress } from 'ngx-progressbar';
 import {DatabaseProvider} from "../../providers/database/database";
 import swal from "sweetalert";
 import {GlobalProvider} from "../../providers/global/global";
+import { LoadingController } from 'ionic-angular';
 
 /**
  * Generated class for the MDesafioPage page.
@@ -51,7 +52,8 @@ export class MDesafioPage {
               public ngProgress: NgProgress,
               public networks: NetworksProvider,
               private database: DatabaseProvider,
-              public global: GlobalProvider) {
+              public global: GlobalProvider,
+              public loading: LoadingController) {
   }
 
   ionViewDidLoad() {
@@ -59,12 +61,10 @@ export class MDesafioPage {
     this.id = this.navParams.get('id');
     if(this.name == 'Descubrimiento de Activos'){
       this.getHosts(this.id);
-      this.getDiscovery();
+      //this.getDiscovery();
     }
     if(this.name == 'Gestión de Vulnerabilidades'){
       this.getAllHostsByCaseID();
-
-
     }
 
 
@@ -269,7 +269,7 @@ export class MDesafioPage {
       );
   }
   getDiscovery(){
-    this.ngProgress.start();
+    //this.ngProgress.start();
     this.networks.getDiscovery()
       .subscribe(
         (data) => {
@@ -287,35 +287,53 @@ export class MDesafioPage {
               this.networks_saved.push(item_list);
             }
           });
+          console.log("networks_list");
           console.log(this.networks_list);
+          console.log("saveDiscovery");
           this.saveDiscovery(this.networks_list);
-          this.ngProgress.done();
+          //this.ngProgress.done();
 
           //console.log(data);
           //this.pService.done();
         },
         (error) => {
           console.error(error);
-          this.ngProgress.done();
+          //this.ngProgress.done();
         }
       );
 
   }
-  getHosts(_id){
-    this.ngProgress.start();
-    this.database.getAllHostsByCaseID(_id).then((data) => {
-      this.networks_saved = Object(data);
-      console.log(this.networks_saved);
 
-      this.ngProgress.done();
-    }, (error) => {
-      this.ngProgress.done();
-      console.log(error);
+  // Query to get all hosts by case id from localdatabase
+  getHosts(_id){
+    //this.ngProgress.start();
+    let loader = this.loading.create({
+      content: 'Getting hosts...',
     });
+
+    //loader.present().then(() => {
+      this.database.getAllHostsByCaseID(_id).then((data) => {
+        this.networks_saved = Object(data);
+        console.log("getHosts");
+        console.log(this.networks_saved);
+
+        //this.ngProgress.done();
+       // loader.dismiss();
+      }, (error) => {
+        this.ngProgress.done();
+        //console.log(error);
+      //  loader.dismiss();
+      });
+
+     // loader.dismiss();
+   // });
+
+
 
 
   }
   saveDiscovery(list){
+    console.log(this.id);
     list.forEach( item => {
       this.ngProgress.start();
       this.database.createHost2(
