@@ -104,6 +104,7 @@ export class HostPage {
           (error) => {
             console.error(error);
         this.loadingCtrl.loading.dismiss();
+            swal("Error!", "Intente luego!", "error");
           }
         );
 
