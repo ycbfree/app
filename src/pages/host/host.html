@@ -7,23 +7,27 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>{{vendor}} <br /><span style="font-size: 1.5rem; padding:0px">{{ipv4}}</span></ion-title>
+    <ion-title>{{vendor}} <!--br /><span style="font-size: 1.5rem; padding:0px">{{ipv4}}</span--></ion-title>
   </ion-navbar>
 
 
 </ion-header>
 
-<ng-progress [showSpinner]="true"></ng-progress>
+
 
 <ion-content padding>
 
   <ion-card>
-    <ion-card-header>
-      Header
-    </ion-card-header>
-    <ion-card-content>
-      The British use the term "header", but the American term "head-shot" the English simply refuse to adopt.
-    </ion-card-content>
+    <ion-item>
+      <ion-avatar item-start>
+
+
+      <img src="assets/green-circle.png" height="96" width="96"/>
+        </ion-avatar>
+      <h2>{{ipv4}}</h2>
+      <p>{{mac}}</p>
+    </ion-item>
+
   </ion-card>
 
    <ion-buttons>
@@ -32,7 +36,7 @@
 
   <ion-list>
     <ion-item *ngFor="let item of net_ports">
-      <h2> Port {{ item.port }} / {{item.protocol}}</h2>
+      <h2 style="color:cadetblue"> Port {{ item.port }} / {{item.protocol}}</h2>
       <p><b>{{ item.service }}</b> {{item.version}}</p>
       <button ion-button small (click)="showCVE(item.port)" *ngIf="item.cantidadCVE">Mostrar Vulnerabilidades</button>
       <button ion-button small (click)="_dnsResolver()" *ngIf="item.port==53">EVADE DNS</button>
