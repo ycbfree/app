@@ -3,6 +3,8 @@ import { NavController } from 'ionic-angular';
 import { NetworksProvider } from '../../providers/networks/networks';
 import {DatabaseProvider} from "../../providers/database/database";
 import swal from "sweetalert";
+import * as moment from 'moment';
+import 'moment/locale/es';  // without this line it didn't work
 
 
 
@@ -11,6 +13,7 @@ import swal from "sweetalert";
   templateUrl: 'home.html'
 })
 export class HomePage {
+  public date: any;
   users: any[] = [];
   networks_list: any[] = [];
   all_cases: any[] = [];
@@ -20,8 +23,6 @@ export class HomePage {
   constructor(public navCtrl: NavController,
               public networks: NetworksProvider,
               private database: DatabaseProvider) {
-
-
   }
 
   getDiscovery(){

@@ -19,6 +19,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { NgProgressModule } from 'ngx-progressbar';
 import { GlobalProvider } from '../providers/global/global';
 import { LoadingProvider } from '../providers/loading/loading';
+import { MomentModule } from 'angular2-moment';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { LoadingProvider } from '../providers/loading/loading';
     HttpClientModule,
     BrowserAnimationsModule,
     IonicStepperModule,
+    MomentModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],

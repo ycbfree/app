@@ -60,7 +60,7 @@ export class MDesafioPage {
     this.id = this.navParams.get('id');
     if(this.name == 'Descubrimiento de Activos'){
       this.getHosts(this.id);
-      //this.getDiscovery();
+      this.getDiscovery();
     }
     if(this.name == 'Gestión de Vulnerabilidades'){
       this.getAllHostsByCaseID();
@@ -70,17 +70,32 @@ export class MDesafioPage {
   }
 
   getAllHostsByCaseID(){
-    this.ngProgress.start();
-    this.database.getAllHostsHostDiscovery(this.id).then((data) => {
-      this.discovery_saved = Object(data);
-      console.log(this.discovery_saved);
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
+      this.database.getAllHostsHostDiscovery(this.id).then((data) => {
+        this.discovery_saved = Object(data);
+        console.log(this.discovery_saved);
 
-      this.ngProgress.done();
-    }, (error) => {
-      this.ngProgress.done();
-      console.log(error);
+        this.loadingCtrl.loading.dismissAll();
+      }, (error) => {
+        this.loadingCtrl.loading.dismissAll();
+        console.log(error);
+      });
     });
 
+  }
+
+  // Query to get all hosts by case id from localdatabase
+  getHosts(_id){
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
+      this.database.getAllHostsByCaseID(_id).then((data) => {
+        this.networks_saved = Object(data);
+        console.log("getHosts");
+        console.log(this.networks_saved);
+        this.loadingCtrl.loading.dismissAll();
+      }, (error) => {
+        this.loadingCtrl.loading.dismissAll();
+      });
+    } );
   }
 
   goToHost(cases_id, mac, ipv4, vendor){
@@ -94,7 +109,7 @@ export class MDesafioPage {
 
   }
   evadeLAN(){
-    this.ngProgress.start();
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
     this.networks.checkevadeLAN()
       .subscribe(
         (data) => {
@@ -104,19 +119,20 @@ export class MDesafioPage {
           }else{
             swal("Error!", "EVADE ERROR!", "error");
           }
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
 
         },
         (error) => {
           console.error(error);
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
           swal("Ups!", "Error, intente luego!.", "error");
         }
       );
-
+      }
+    );
   }
   checkLAN(){
-    this.ngProgress.start();
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
     this.networks.checkLAN()
       .subscribe(
         (data) => {
@@ -141,18 +157,19 @@ export class MDesafioPage {
             swal("Ups!", "Error, Intente Evadiendo LAN.", "error");
           }
 
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
         },
         (error) => {
           console.error(error);
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
           this.isEvadeLan = true;
           swal("Ups!", "Error, intente luego!.", "error");
         }
       );
+    });
   }
   checkDNS(){
-    this.ngProgress.start();
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
     this.networks.checkDNS()
       .subscribe(
         (data) => {
@@ -164,17 +181,18 @@ export class MDesafioPage {
           }else{
             swal("Error!", "NO DNS!", "error");
           }
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
         },
         (error) => {
           console.error(error);
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
           swal("Ups!", "Error, intente luego!.", "error");
         }
       );
+    });
   }
   checkHTTP_t(){
-    this.ngProgress.start();
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
     this.networks.checkHTTP_t()
       .subscribe(
         (data) => {
@@ -184,19 +202,20 @@ export class MDesafioPage {
           }
           this.http_status = data['result'][0]["status"];
 
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
           swal("Exito!", "HTTP OK.", "success");
         },
         (error) => {
           console.error(error);
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
           swal("Ups!", "Error, intente luego!.", "error");
         }
       );
+      });
 
   }
   checkHTTPS_t(){
-    this.ngProgress.start();
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
     this.networks.checkHTTP_t()
       .subscribe(
         (data) => {
@@ -206,48 +225,50 @@ export class MDesafioPage {
           }
           this.http_status = data['result'][0]["status"];
 
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
           swal("Exito!", "HTTPS OK.", "success");
         },
         (error) => {
           console.error(error);
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
           swal("Ups!", "Error, intente luego!.", "error");
         }
       );
+    });
 
   }
   finish(){
     swal("Felicidades!", "Ya Estas Dentro!", "success");
   }
   checkHTTP(){
-    this.ngProgress.start();
-    this.networks.checkHTTP()
-      .subscribe(
-        (data) => {
-          console.log(data['result']);
-          if(data['result'][0]["status"] == "OK"){
-            this.isValidHttp = true;
-            this.http_status = data['result'][0]["status"];
-            swal("Exito!", "HTTP OK.", "success");
-          }else{
-            this.isValidHttp = false;
-            this.http_status = data['result'][0]["status"];
-            this.ngProgress.done();
-            swal("Error!", "HTTP NO OK", "error");
-          }
-          this.ngProgress.done();
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
+      this.networks.checkHTTP()
+        .subscribe(
+          (data) => {
+            console.log(data['result']);
+            if (data['result'][0]["status"] == "OK") {
+              this.isValidHttp = true;
+              this.http_status = data['result'][0]["status"];
+              swal("Exito!", "HTTP OK.", "success");
+            } else {
+              this.isValidHttp = false;
+              this.http_status = data['result'][0]["status"];
+              this.loadingCtrl.loading.dismissAll();
+              swal("Error!", "HTTP NO OK", "error");
+            }
+            this.loadingCtrl.loading.dismissAll();
 
-        },
-        (error) => {
-          console.error(error);
-          this.ngProgress.done();
-          swal("Ups!", "Error, intente luego!.", "error");
-        }
-      );
+          },
+          (error) => {
+            console.error(error);
+            this.loadingCtrl.loading.dismissAll();
+            swal("Ups!", "Error, intente luego!.", "error");
+          }
+        );
+    });
   }
   checkHTTPS(){
-    this.ngProgress.start();
+    this.loadingCtrl.presentWithGif1().present().then( ()=> {
     this.networks.checkHTTPS()
       .subscribe(
         (data) => {
@@ -257,77 +278,56 @@ export class MDesafioPage {
           }
           this.https_status = data['result'][0]["status"];
 
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
           swal("Exito!", "HTTPS OK.", "success");
         },
         (error) => {
           console.error(error);
-          this.ngProgress.done();
+          this.loadingCtrl.loading.dismissAll();
           swal("Ups!", "Error, intente luego!.", "error");
         }
       );
+    });
   }
   getDiscovery(){
-    //this.ngProgress.start();
-    this.networks.getDiscovery()
-      .subscribe(
-        (data) => {
-          this.networks_list = data['result'];
-          console.log("forEach");
-          this.networks_list.forEach(item_list => {
-            let found = 0;
-            this.networks_saved.forEach(item_saved => {
-              if((item_list.ipv4 == item_saved.ipv4) && (item_list.mac == item_saved.mac)){
-                found = 1;
-              }
-
-            });
-            if(found == 0){
-              this.networks_saved.push(item_list);
-            }
-          });
-          console.log("networks_list");
-          console.log(this.networks_list);
-          console.log("saveDiscovery");
-          this.saveDiscovery(this.networks_list);
-          //this.ngProgress.done();
-
-          //console.log(data);
-          //this.pService.done();
-        },
-        (error) => {
-          console.error(error);
-          //this.ngProgress.done();
-        }
-      );
-
-  }
-
-  // Query to get all hosts by case id from localdatabase
-  getHosts(_id){
     this.loadingCtrl.presentWithGif1().present().then( ()=> {
-      this.database.getAllHostsByCaseID(_id).then((data) => {
-        this.networks_saved = Object(data);
-        console.log("getHosts");
-        console.log(this.networks_saved);
-        this.loadingCtrl.loading.dismissAll();
-      }, (error) => {
-        this.loadingCtrl.loading.dismissAll();
-      });
-    } );
+      this.networks.getDiscovery()
+        .subscribe(
+          (data) => {
+            this.networks_list = data['result'];
+            console.log("forEach");
+            this.networks_list.forEach(item_list => {
+              let found = 0;
+              this.networks_saved.forEach(item_saved => {
+                if ((item_list.ipv4 == item_saved.ipv4) && (item_list.mac == item_saved.mac)) {
+                  found = 1;
+                }
+              });
+              if (found == 0) {
+                this.networks_saved.push(item_list);
+              }
+            });
+            console.log("networks_list");
+            console.log(this.networks_list);
+            console.log("saveDiscovery");
+            this.loadingCtrl.loading.dismissAll();
+            this.saveDiscovery(this.networks_list);
 
-
-
-
-
-
-
-
+          },
+          (error) => {
+            this.loadingCtrl.loading.dismissAll();
+            console.error(error);
+          }
+        );
+    });
   }
+
+
   saveDiscovery(list){
     console.log(this.id);
-    list.forEach( item => {
-      this.ngProgress.start();
+    //this.loadingCtrl.presentWithGif1().present().then( ()=> {
+
+      list.forEach( item => {
       this.database.createHost2(
         item.ipv4,
         item.mac,
@@ -335,14 +335,16 @@ export class MDesafioPage {
         item.status,
         item.types,
         this.id).then((data) => {
-          this.ngProgress.done();
+         //this.loadingCtrl.loading.dismissAll();
         //swal("Exito!", "Guardado Correctamente!.", "success");
       }, (error) => {
-          this.ngProgress.done();
+         //this.loadingCtrl.loading.dismissAll();
         //swal("Ups!", "Error, intente luego!.", "error");
         console.log(error);
       });
     });
+    //});
+
   }
   closeModal(){
     this.view.dismiss();

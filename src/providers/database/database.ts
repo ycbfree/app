@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/map';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import * as moment from "moment";
 
 @Injectable()
 export class DatabaseProvider {
@@ -52,7 +53,7 @@ export class DatabaseProvider {
     this.db.executeSql("CREATE TABLE IF NOT EXISTS vulnerabilities (id INTEGER PRIMARY KEY AUTOINCREMENT, id_host_discovery number, cve text, description text, cases_id integer, status number );",[]);
     this.db.executeSql("CREATE TABLE IF NOT EXISTS host (id INTEGER PRIMARY KEY AUTOINCREMENT,ipv4 text, mac text, vendor text, status text, types text, cases_id integer);", []);
     this.db.executeSql("CREATE TABLE IF NOT EXISTS networks (id INTEGER PRIMARY KEY AUTOINCREMENT, ipv4 text, mac text);", []);
-    return this.db.executeSql("CREATE TABLE IF NOT EXISTS cases (id INTEGER PRIMARY KEY AUTOINCREMENT, created_time DATETIME DEFAULT CURRENT_TIMESTAMP," +
+    return this.db.executeSql("CREATE TABLE IF NOT EXISTS cases (id INTEGER PRIMARY KEY AUTOINCREMENT, created_time text," +
       "name text, description text );",[]);
   }
 
@@ -234,9 +235,10 @@ export class DatabaseProvider {
   }
 
   createCase(name: string, description: string){
+    var CurrentDate = moment().valueOf();
     return new Promise((resolve, reject) => {
-      let sql = "INSERT INTO cases (name, description) VALUES (?,?)";
-      this.db.executeSql(sql, [name, description]).then((data)=> {
+      let sql = "INSERT INTO cases (name, description, created_time) VALUES (?,?,?)";
+      this.db.executeSql(sql, [name, description,CurrentDate]).then((data)=> {
         resolve(data);
       }, (error) =>{
         reject(error);
