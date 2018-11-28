@@ -57,6 +57,8 @@ export class HostPage {
       this.networks.getVulnByIp(ipv4)
         .subscribe(
           (data) => {
+            console.log("getVuln");
+            console.log(data);
             let listports = data['services'];
             let listcve = data['CVE'];
             this.net_ports =[];
@@ -78,6 +80,15 @@ export class HostPage {
                 "cantidadCVE" : countCVE
               };
               this.net_ports.push(obj);
+
+
+              console.log(this.ipv4);
+              console.log(parseInt(item["port"]));
+              console.log(item["protocol"]);
+              console.log(item["state"]);
+              console.log(item["version"]);
+              console.log(this.cases_id);
+              console.log(countCVE);
 
               this.database.insertHostDiscovery(this.ipv4, parseInt(item["port"]),item["protocol"],item["state"],item["version"], this.cases_id,countCVE).then((data) => {
                 console.log(data["insertId"]);

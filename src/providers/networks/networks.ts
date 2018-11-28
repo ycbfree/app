@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 /*
@@ -10,45 +10,77 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class NetworksProvider {
 
-  url : string = "http://192.168.0.34:5000";
+  headers = new HttpHeaders();
+
+
+
+  url : string = "http://192.168.5.1:5000";
 
   constructor(public http: HttpClient) {
+    this.headers.append('Cache-control', 'no-cache');
+    this.headers.append('Expires', '0');
+    this.headers.append('Pragma', 'no-cache');
   }
 
 
   getDiscovery(){
-    return this.http.get(this.url+"/services/discovery");
+
+    return this.http.get(this.url+"/services/discovery", { headers:
+      this.headers
+    });
   }
 
   checkevadeLAN(){
-    return this.http.get(this.url+"/services/ycbmaster/checkevade");
+    return this.http.get(this.url+"/services/ycbmaster/checkevade", {
+      headers:
+      this.headers
+    });
   }
-
-  checkLAN(){
-    return this.http.get(this.url+"/services/ycbmaster/lan");
+  checkLAN() {
+    return this.http.get(this.url + "/services/ycbmaster/lan", {
+      headers:
+      this.headers
+    });
   }
   checkDNS(){
-    return this.http.get(this.url+"/services/ycbmaster/dns");
+    return this.http.get(this.url+"/services/ycbmaster/dns", {
+      headers:
+      this.headers
+    });
   }
-
   checkHTTP(){
-    return this.http.get(this.url+"/services/ycbmaster/http");
+    return this.http.get(this.url+"/services/ycbmaster/http", {
+      headers:
+      this.headers
+    });
   }
 
   checkHTTP_t(){
-    return this.http.get(this.url+"/services/ycbmaster/testdnstunneling");
+    return this.http.get(this.url+"/services/ycbmaster/testdnstunneling", {
+      headers:
+      this.headers
+    });
   }
 
   checkHTTPS(){
-    return this.http.get(this.url+"/services/ycbmaster/https");
+    return this.http.get(this.url+"/services/ycbmaster/https", {
+      headers:
+      this.headers
+    });
   }
 
   getDiscoveryByIp(ipv4){
-    return this.http.get(this.url+"/services/ycbmaster/vulns?ipv4="+ipv4);
+    return this.http.get(this.url+"/services/ycbmaster/vulns?ipv4="+ipv4, {
+      headers:
+      this.headers
+    });
   }
 
   getVulnByIp(ipv4){
-    return this.http.get(this.url+"/services/ycbmaster/discovery_vulns?ipv4="+ipv4);
+    return this.http.get(this.url+"/services/ycbmaster/discovery_vulns?ipv4="+ipv4, {
+      headers:
+      this.headers
+    });
   }
 
   dnsTunneling(){

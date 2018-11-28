@@ -325,6 +325,7 @@ export class MDesafioPage {
 
   saveDiscovery(list){
     console.log(this.id);
+    console.log(list);
     //this.loadingCtrl.presentWithGif1().present().then( ()=> {
 
       list.forEach( item => {

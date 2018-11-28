@@ -12,7 +12,7 @@ export class LoadingProvider {
       spinner: 'hide',
       content: `
           <div class="custom-spinner-container">
-            <img class="loading" width="120px" height="120px" src="assets/loader1.gif" />
+            <img class="loading" width="120px" height="120px" src="assets/dinogiftranswall.gif" />
           </div>`
     });
 
