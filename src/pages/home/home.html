@@ -22,7 +22,7 @@
         <ion-item (click)="goToCase(item.id,item.created_time,item.name,item.description)">
           <h2> {{ item.name }}</h2>
           <p>{{ item.description }}</p>
-          <p>{{ item.created_time | amTimeAgo }}</p>
+          <p>{{ item.created_time }}</p>
 
           <button ion-button clear item-end><ion-icon name="arrow-forward"></ion-icon></button>
         </ion-item>
@@ -35,6 +35,9 @@
 
 
     </ion-list>
+
+
   </ion-card>
 </ion-content>
+
 

@@ -44,8 +44,8 @@
       <h3 *ngIf="http_status">HTTP: {{http_status}}</h3>
 
       <button ion-button color="light" small ionicStepperPrevious>Previous</button>
-      <button ion-button small (click)="checkHTTP()" *ngIf="global.httpTunnelingFlag == false">VALIDAR HTTP</button>
-      <button ion-button small (click)="checkHTTP_t()" *ngIf="global.httpTunnelingFlag == true">VALIDAR HTTP TUNNELING</button>
+      <button ion-button small (click)="checkHTTP()">VALIDAR HTTP</button>
+      <button ion-button small (click)="checkHTTP_t()" *ngIf="isEvadeHttp">VALIDAR HTTP TUNNELING</button>
       <button [attr.disabled]="!isValidHttp ? true : null" ion-button small ionicStepperNext>Siguiente</button>
     </ion-step>
     <ion-step label="Nivel 4"
@@ -54,8 +54,8 @@
 
 
       <button ion-button color="light" small ionicStepperPrevious>Previous</button>
-      <button ion-button small (click)="checkHTTPS()" *ngIf="global.httpTunnelingFlag == false">VALIDAR HTTPS</button>
-      <button ion-button small (click)="checkHTTPS_t()" *ngIf="global.httpTunnelingFlag == true">VALIDAR HTTPS TUNNELING</button>
+      <button ion-button small (click)="checkHTTPS()">VALIDAR HTTPS</button>
+      <button ion-button small (click)="checkHTTPS_t()" *ngIf="isEvadeHttp">VALIDAR HTTPS TUNNELING</button>
       <button [attr.disabled]="!isValidHttps ? true : null" ion-button small ionicStepperNext (click)="finish()">Finalizar
       </button>
     </ion-step>
@@ -96,6 +96,16 @@
 </ion-content>
 
 <ion-content padding *ngIf="name=='Gestión de Vulnerabilidades'">
+  <div style="position: relative; height:60vh">
+    <canvas #cvebyport> </canvas>
+  </div>
+
+  <div style="position: relative; height:60vh">
+    <canvas #cvebyhost> </canvas>
+  </div>
+
+  <h3>Detalle</h3>
+
   <ion-list>
     <div *ngFor="let item of discovery_saved">
       <ion-item>
@@ -104,13 +114,6 @@
         <p  *ngIf="item.cantidad_cve < 11 && item.cantidad_cve > 5">Port: {{ item.port}} <ion-badge item-end color="primary"> Cantidad CVE {{item.cantidad_cve}}</ion-badge></p>
         <p  *ngIf="item.cantidad_cve < 6">Port: {{ item.port}} <ion-badge item-end color="secondary"> Cantidad CVE {{item.cantidad_cve}}</ion-badge></p>
 
-
-        <!--ion-select [(ngModel)]="item.types" multiple="false">
-          <ion-option>Servidor</ion-option>
-          <ion-option>Base de Datos</ion-option>
-          <ion-option>Usuario</ion-option>
-          <ion-option>Equipo Critico</ion-option>
-        </ion-select-->
       </ion-item>
     </div>
   </ion-list>

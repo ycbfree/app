@@ -58,7 +58,6 @@ export class HostPage {
         .subscribe(
           (data) => {
             console.log("getVuln");
-            console.log(data);
             let listports = data['services'];
             let listcve = data['CVE'];
             this.net_ports =[];

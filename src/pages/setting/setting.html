@@ -15,4 +15,26 @@
 
 <ion-content padding>
 
+  <button ion-button icon-start block (click)="stopServices(1)">
+    <ion-icon name="alert"></ion-icon>
+    Detener Tor
+  </button>
+  <button ion-button icon-start block (click)="stopServices(2)">
+    <ion-icon name="alert"></ion-icon>
+    Detener Squid
+  </button>
+  <button ion-button icon-start block (click)="stopServices(3)">
+    <ion-icon name="alert"></ion-icon>
+    Detener Dnstunnel
+  </button>
+  <button ion-button icon-start block (click)="stopServices(4)">
+    <ion-icon name="alert"></ion-icon>
+    Limpiar resolv.conf
+  </button>
+  <button ion-button icon-start block (click)="stopServices(5)">
+    <ion-icon name="alert"></ion-icon>
+    Detener Servicios
+  </button>
+
+
 </ion-content>

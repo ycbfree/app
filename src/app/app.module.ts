@@ -20,6 +20,7 @@ import { NgProgressModule } from 'ngx-progressbar';
 import { GlobalProvider } from '../providers/global/global';
 import { LoadingProvider } from '../providers/loading/loading';
 import { MomentModule } from 'angular2-moment';
+import { ChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { MomentModule } from 'angular2-moment';
     BrowserAnimationsModule,
     IonicStepperModule,
     MomentModule,
+    ChartsModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],

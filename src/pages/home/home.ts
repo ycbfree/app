@@ -20,6 +20,8 @@ export class HomePage {
   ssid : string ;
   public storedata = [];
   myParam: string = 'sssssss';
+
+
   constructor(public navCtrl: NavController,
               public networks: NetworksProvider,
               private database: DatabaseProvider) {
@@ -98,5 +100,10 @@ export class HomePage {
     };
     this.navCtrl.push("CasesPage", data);
   }
+
+
+
+
+
 
 }

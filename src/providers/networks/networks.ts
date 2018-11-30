@@ -95,6 +95,10 @@ export class NetworksProvider {
     return this.http.get(this.url+"/services/ycbmaster/cleartunneling");
   }
 
+  stop_services(opcion){
+    return this.http.get(this.url + "/services/ycbmaster/stop_services?opcion="+opcion);
+  }
+
 
 
 

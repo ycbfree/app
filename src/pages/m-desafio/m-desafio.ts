@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
 import {NetworksProvider} from "../../providers/networks/networks";
 import { NgProgress } from 'ngx-progressbar';
@@ -6,12 +6,8 @@ import {DatabaseProvider} from "../../providers/database/database";
 import swal from "sweetalert";
 import {GlobalProvider} from "../../providers/global/global";
 import { LoadingProvider } from '../../providers/loading/loading';
-/**
- * Generated class for the MDesafioPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { Chart } from 'chart.js';
+
 
 @IonicPage()
 @Component({
@@ -19,6 +15,19 @@ import { LoadingProvider } from '../../providers/loading/loading';
   templateUrl: 'm-desafio.html',
 })
 export class MDesafioPage {
+  @ViewChild('cvebyport') cvebyport;
+  @ViewChild('cvebyhost') cvebyhost;
+
+
+  doughnutChart: any;
+  labels: string[] = [];
+  dataChart: number[]= [];
+
+  doughnutCharthost: any;
+  labelshost: string[] = [];
+  dataCharthost: number[]= [];
+
+
   name: string;
   id: number;
   networks_list: any[] = [];
@@ -29,6 +38,7 @@ export class MDesafioPage {
   isValidHttp : boolean = false;
   isValidHttps : boolean = false;
   isEvadeLan : boolean = false;
+  isEvadeHttp : boolean = false;
 
   discovery_saved: any[] = [];
 
@@ -46,6 +56,7 @@ export class MDesafioPage {
 
 
 
+
   constructor(private navParams: NavParams, private view: ViewController,
               public navCtrl: NavController,
               public ngProgress: NgProgress,
@@ -53,6 +64,7 @@ export class MDesafioPage {
               private database: DatabaseProvider,
               public global: GlobalProvider,
               public loadingCtrl: LoadingProvider) {
+
   }
 
   ionViewDidLoad() {
@@ -69,11 +81,119 @@ export class MDesafioPage {
 
   }
 
+  displayCharthost() {
+    this.doughnutChart = new Chart(this.cvebyhost.nativeElement, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: this.dataCharthost,
+          backgroundColor: [
+            'rgba(188,62,62,1)',
+            'rgba(188,125,62,1)',
+            'rgba(188,188,62,1)',
+            'rgba(125,188,62,1)',
+            'rgba(62,188,62,1)',
+            'rgba(62,188,125,1)',
+            'rgba(62,188,188,1)',
+            'rgba(62,128,188,1)',
+            'rgba(125,62,188,1)',
+            'rgba(188,62,188,1)'
+          ]
+        }],
+        labels : this.labelshost
+      },
+      options: {
+        legend: {
+          display: true
+        },
+        tooltips: {
+          enabled: true
+        },
+        maintainAspectRatio: false,
+        title: {
+          display: true,
+          fontStyle: 'bold',
+          fontSize: 15,
+          text: "TOP VULNERABILIDADES POR HOST"
+        }
+      },
+    });
+  }
+
+
+  displayChart() {
+    this.doughnutChart = new Chart(this.cvebyport.nativeElement, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: this.dataChart,
+          backgroundColor: [
+            'rgba(188,62,62,1)',
+            'rgba(188,125,62,1)',
+            'rgba(188,188,62,1)',
+            'rgba(125,188,62,1)',
+            'rgba(62,188,62,1)',
+            'rgba(62,188,125,1)',
+            'rgba(62,188,188,1)',
+            'rgba(62,128,188,1)',
+            'rgba(125,62,188,1)',
+            'rgba(188,62,188,1)'
+          ]
+        }],
+        labels : this.labels
+      },
+      options: {
+        legend: {
+          display: true
+        },
+        tooltips: {
+          enabled: true
+        },
+        maintainAspectRatio: false,
+        title: {
+          display: true,
+          fontStyle: 'bold',
+          fontSize: 15,
+          text: "TOP SERVICIOS VULNERABLES"
+        }
+      },
+    });
+  }
+
+
+
   getAllHostsByCaseID(){
+
+
     this.loadingCtrl.presentWithGif1().present().then( ()=> {
       this.database.getAllHostsHostDiscovery(this.id).then((data) => {
         this.discovery_saved = Object(data);
         console.log(this.discovery_saved);
+
+
+
+        this.database.getDiscoveryByPort(this.id).then((datahost)=>{
+          console.log("data1");
+          console.log(datahost);
+          let _datahost = Object(datahost);
+          _datahost.forEach( data => {
+            this.labels.push(data.port);
+            this.dataChart.push(data.total_cve);
+          });
+          this.displayChart();
+        });
+
+        this.database.getDiscoveryByHost(this.id).then((datahost)=>{
+          console.log("data2");
+          console.log(datahost);
+          let _datahost = Object(datahost);
+          _datahost.forEach( data => {
+            this.labelshost.push(data.ipv4);
+            this.dataCharthost.push(data.total_cve);
+          });
+          this.displayCharthost();
+        });
+
 
         this.loadingCtrl.loading.dismissAll();
       }, (error) => {
@@ -227,6 +347,8 @@ export class MDesafioPage {
 
           this.loadingCtrl.loading.dismissAll();
           swal("Exito!", "HTTPS OK.", "success");
+          this.isValidHttps = true;
+
         },
         (error) => {
           console.error(error);
@@ -254,6 +376,7 @@ export class MDesafioPage {
               this.isValidHttp = false;
               this.http_status = data['result'][0]["status"];
               this.loadingCtrl.loading.dismissAll();
+              this.isEvadeHttp = true;
               swal("Error!", "HTTP NO OK", "error");
             }
             this.loadingCtrl.loading.dismissAll();
@@ -279,9 +402,11 @@ export class MDesafioPage {
           this.https_status = data['result'][0]["status"];
 
           this.loadingCtrl.loading.dismissAll();
+          this.isEvadeHttp = true;
           swal("Exito!", "HTTPS OK.", "success");
         },
         (error) => {
+          this.isEvadeHttp = true;
           console.error(error);
           this.loadingCtrl.loading.dismissAll();
           swal("Ups!", "Error, intente luego!.", "error");
@@ -359,5 +484,15 @@ export class MDesafioPage {
         console.log(error);
       });
   }*/
+
+
+  // events
+  public chartClicked(e:any):void {
+    console.log(e);
+  }
+
+  public chartHovered(e:any):void {
+    console.log(e);
+  }
 
 }

@@ -3,6 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { MDesafioPage } from './m-desafio';
 import {NgProgressModule} from "ngx-progressbar";
 import { IonicStepperModule } from 'ionic-stepper';
+import {ChartsModule} from "ng2-charts";
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import { IonicStepperModule } from 'ionic-stepper';
   imports: [
     IonicStepperModule,
     NgProgressModule,
+    ChartsModule,
     IonicPageModule.forChild(MDesafioPage),
   ],
 })

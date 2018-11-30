@@ -73,9 +73,45 @@ export class DatabaseProvider {
     });
   }
 
+  getDiscoveryByPort(cases_id: number){
+    return new Promise((resolve,reject) => {
+      this.db.executeSql( "SELECT port,sum(cantidad_cve) as total_cve FROM host_discovery where cases_id = ? group by port order by total_cve desc",  [cases_id]).then( (data) => {
+        let arrayHost = [];
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+            arrayHost.push({
+              port: data.rows.item(i).port,
+              total_cve : data.rows.item(i).total_cve
+            });
+          }
+        }resolve(arrayHost);
+      }, (error) => {
+        reject(error);
+      });
+    });
+  }
+
+  getDiscoveryByHost(cases_id: number){
+    return new Promise((resolve,reject) => {
+      this.db.executeSql( "SELECT ipv4,sum(cantidad_cve) as total_cve FROM host_discovery where cases_id = ? group by ipv4 order by total_cve desc",  [cases_id]).then( (data) => {
+        let arrayHost = [];
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+            arrayHost.push({
+              ipv4: data.rows.item(i).ipv4,
+              total_cve : data.rows.item(i).total_cve
+            });
+          }
+        }resolve(arrayHost);
+      }, (error) => {
+        reject(error);
+      });
+    });
+  }
+
   getAllHostsHostDiscovery(cases_id: number){
     return new Promise((resolve, reject)=> {
-      this.db.executeSql("SELECT * FROM host_discovery where cases_id = ?", [cases_id]).then((data) => {
+      this.db.executeSql("SELECT * FROM host_discovery where cases_id = ? order by cantidad_cve desc", [cases_id]).then((data) => {
           let arrayNetworks = [];
           if (data.rows.length > 0) {
             for (var i = 0; i < data.rows.length; i++) {
